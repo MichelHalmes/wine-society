@@ -6,10 +6,11 @@ import Home from './Home.js';
 export default class PlayerApp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {name: undefined, xx: 1};
+    this.state = {name: 'Michel'};
   }
 
   handleLoginSubmit(name) {
+    console.log('root handleLoginSubmit', name)
     this.setState({name})
   }
 

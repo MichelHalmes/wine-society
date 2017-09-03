@@ -8,8 +8,11 @@ export default class Login extends React.Component {
     this.state = {text: undefined};
   }
 
+  handleChangeText(text) {
+    this.setState({text})
+  }
+
   render() {
-    console.log(this.state)
     return (
       <Container>
         <Header />
@@ -17,16 +20,15 @@ export default class Login extends React.Component {
           <Form>
             <Item floatingLabel>
               <Label>Username</Label>
-              <Input onChangeText={(text) => this.setState({text})} value={this.state.text}/>
+              <Input onChangeText={this.handleChangeText.bind(this)} value={this.state.text}/>
             </Item>
           </Form>
           <Button
             title="Submit"
-            onPress={() =>  this.props.onLoginSubmit(this.state.text)}
+            onPress={() => {this.props.onLoginSubmit(this.state.text)}}
           />
         </Content>
       </Container>
-
     );
   }
 }
