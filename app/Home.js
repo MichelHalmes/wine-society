@@ -2,16 +2,9 @@ import React from 'react';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
 import { View, TouchableHighlight } from 'react-native'
 
+
 import SortableListView from './SortableListView.js'
-
-const tags = [2, 4, 6]
-
-let data = {
-  pinotage: { text: 'Pinotage', tag: 1 },
-  shiraz: { text: 'Shiraz', tag: 2 },
-  merlot: { text: 'Merlot', tag: 3 },
-
-}
+import client from './client.js'
 
 class RowComponent extends React.Component {
   render() {
@@ -26,7 +19,7 @@ class RowComponent extends React.Component {
         }}
         {...this.props.sortHandlers}
       >
-        <Text>{this.props.data.text}  {this.props.data.tag}</Text>
+        <Text>{this.props.index}  {this.props.data.tag}</Text>
       </TouchableHighlight>
     )
   }
@@ -36,8 +29,42 @@ class RowComponent extends React.Component {
 export default class PlayerApp extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {order: Object.keys(data) }
+    let __DATA = {
+      pinotage: { tag: 1 },
+      shiraz: { tag: 2 },
+      merlot: { tag: 3 },
+    }
+    this.tags = []
+    this.state = {order: [], data: {}}
+  }
 
+  componentDidMount() {
+    client.getWinesTags()
+      .then(({wines, tags}) => {
+        console.log(wines, tags)
+        let data = tags.reduce((acc, cur, i) => {
+          acc[wines[i]] = {tag: cur}
+          return acc;
+        }, {})
+        this.tags = tags
+        this.setState({order: wines, data})
+
+      })
+
+  }
+
+  handleRowMove(e) {
+    let order_copy = this.state.order.slice()
+    order_copy.splice(e.to, 0, order_copy.splice(e.from, 1)[0])
+    let data_copy = {}
+    order_copy.forEach((key, i) => {
+      data_copy[key] = {tag: this.tags[i]}
+    })
+    this.setState({
+      order: order_copy,
+      data: data_copy
+    })
+    this.forceUpdate()
   }
 
   render() {
@@ -58,22 +85,10 @@ export default class PlayerApp extends React.Component {
 
           <SortableListView
             style={{ flex: 1 }}
-            data={data}
+            data={this.state.data}
             order={this.state.order}
-            onRowMoved={e => {
-              console.log(e)
-              let order_copy = this.state.order.slice()
-              order_copy.splice(e.to, 0, order_copy.splice(e.from, 1)[0])
-              console.log(order_copy)
-              this.setState({order: order_copy})
-              order_copy.forEach((key, i) => {
-                data[key].tag = tags[i]
-              })
-              console.log(data)
-              this.forceUpdate()
-              // console.log(order)
-            }}
-            renderRow={(data, section, index, highlightfn, active) => <RowComponent data={data} section={section} index={index}/>}
+            onRowMoved={e => this.handleRowMove(e)}
+            renderRow={(data, section, index) => <RowComponent data={data} index={index}/>}
           />
 
         </Content>
