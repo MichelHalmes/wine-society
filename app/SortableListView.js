@@ -484,4 +484,4 @@ class SortableListView extends React.Component {
   }
 }
 
-module.exports = SortableListView
+export default SortableListView

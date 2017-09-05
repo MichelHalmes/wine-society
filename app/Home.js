@@ -1,44 +1,22 @@
 import React from 'react';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
-import { View, TouchableHighlight } from 'react-native'
+
 
 
 import SortableListView from './SortableListView.js'
+import WineTag from './WineTag.js'
 import client from './client.js'
-
-class RowComponent extends React.Component {
-  render() {
-    return (
-      <TouchableHighlight
-        underlayColor={'#eee'}
-        style={{
-          padding: 25,
-          backgroundColor: '#F8F8F8',
-          borderBottomWidth: 1,
-          borderColor: '#eee',
-        }}
-        {...this.props.sortHandlers}
-      >
-        <Text>{this.props.index}  {this.props.data.tag}</Text>
-      </TouchableHighlight>
-    )
-  }
-}
 
 
 export default class PlayerApp extends React.Component {
   constructor(props) {
     super(props)
-    let __DATA = {
-      pinotage: { tag: 1 },
-      shiraz: { tag: 2 },
-      merlot: { tag: 3 },
-    }
     this.tags = []
     this.state = {order: [], data: {}}
   }
 
   componentDidMount() {
+    console.log('home componentDidMount')
     client.getWinesTags()
       .then(({wines, tags}) => {
         console.log(wines, tags)
@@ -77,7 +55,7 @@ export default class PlayerApp extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>Cheers {this.props.name}!</Title>
+            <Title>Cheers {this.props.username}!</Title>
           </Body>
           <Right />
         </Header>
@@ -88,8 +66,10 @@ export default class PlayerApp extends React.Component {
             data={this.state.data}
             order={this.state.order}
             onRowMoved={e => this.handleRowMove(e)}
-            renderRow={(data, section, index) => <RowComponent data={data} index={index}/>}
+            renderRow={(data, section, index) => <WineTag data={data} index={index}/>}
           />
+        <Button block success><Text>Submit</Text></Button>
+
 
         </Content>
         <Footer>

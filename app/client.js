@@ -2,16 +2,15 @@
 
 const SERVER_HOST_PORT = 'http://10.0.0.4:3000'
 
-function handleError(error) {
-  console.error(error);
-}
 
 function checkStatus(response) {
   console.log('checkStatus')
   if (response.status >= 200 && response.status < 300) {
     return response;
   } else {
-    let error = new Error(response.statusText);
+    console.error(response);
+    const error = new Error(`Error ${response.status}: ${response.statusText}`);
+    error.status = response.statusText;
     error.response = response;
     throw error;
   }
@@ -19,26 +18,35 @@ function checkStatus(response) {
 
 function getWinesTags() {
   console.log('getWinesTags')
-  return fetch(`${SERVER_HOST_PORT}/api/wines_tags`)
+  return fetch(`${SERVER_HOST_PORT}/api/wines_tags`, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
     .then(checkStatus)
     .then((response) => response.json())
-    .catch(handleError);
+}
+
+function postLogin(username) {
+  console.log('Login')
+  return fetch(`${SERVER_HOST_PORT}/api/login`, {
+      method: 'POST',
+      body: JSON.stringify({ username }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(checkStatus)
+    .then((response) => response.json())
 }
 
 
-// fetch('https://mywebsite.com/endpoint/', {
-//   method: 'POST',
-//   headers: {
-//     'Accept': 'application/json',
-//     'Content-Type': 'application/json',
-//   },
-//   body: JSON.stringify({
-//     firstParam: 'yourValue',
-//     secondParam: 'yourOtherValue',
-//   })
-// })
+
 
 
 export default {
   getWinesTags,
+  postLogin
 }

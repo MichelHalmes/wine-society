@@ -11,14 +11,22 @@ export default class App1 extends React.Component {
     };
   }
 
-  async componentWillMount() {
-    await Expo.Font.loadAsync({
+  componentWillMount() {
+    Expo.Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
       Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
-    });
+    })
+    .then(res => {
+      console.log('app componentDidMount')
+      this.setState({ isReady: true });
+    }).
+    catch(err => {
+      console.error('app componentDidMount', err)
+      throw err    
+    })
 
-    this.setState({ isReady: true });
+
   }
   render() {
     if (!this.state.isReady) {
