@@ -19,12 +19,12 @@ export default class WineTag extends React.Component {
         <View style={{flex: 1, flexDirection: 'row'}}>
           <View style={{width: 50, height: 50, backgroundColor: 'powderblue', justifyContent: "center", alignItems: "center"}} >
             <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center', textAlignVertical: "center"}}>
-              {this.props.data.tag}
+              {this.props.tag}
             </Text>
           </View>
           <View style={{flex:1,justifyContent: "center",alignItems: "center"}}>
             <Text style={{textAlignVertical: "center",textAlign: "center",}}>
-              {this.props.index}
+              {this.props.wine}
             </Text>
           </View>
         </View>

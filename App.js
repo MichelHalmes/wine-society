@@ -23,7 +23,7 @@ export default class App1 extends React.Component {
     }).
     catch(err => {
       console.error('app componentDidMount', err)
-      throw err    
+      throw err
     })
 
 
@@ -39,3 +39,5 @@ export default class App1 extends React.Component {
 
 // https://medium.com/the-react-native-log/building-an-authentication-flow-with-react-navigation-fb5de2203b5c
 // https://github.com/saberking/react-native-draggable-list
+
+// http://ionicons.com/

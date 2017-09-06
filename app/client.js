@@ -6,13 +6,13 @@ const SERVER_HOST_PORT = 'http://10.0.0.4:3000'
 function checkStatus(response) {
   console.log('checkStatus')
   if (response.status >= 200 && response.status < 300) {
-    return response;
+    return response
   } else {
-    console.error(response);
-    const error = new Error(`Error ${response.status}: ${response.statusText}`);
-    error.status = response.statusText;
-    error.response = response;
-    throw error;
+    console.error(response)
+    const error = new Error(`Error ${response.status}: ${response.statusText}`)
+    error.status = response.statusText
+    error.response = response
+    throw error
   }
 }
 
@@ -42,11 +42,25 @@ function postLogin(username) {
     .then((response) => response.json())
 }
 
+function postGuess(username, guess) {
+  console.log('Guess')
+  return fetch(`${SERVER_HOST_PORT}/api/guess`, {
+      method: 'POST',
+      body: JSON.stringify({ username, guess }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(checkStatus)
+    .then((response) => response.json())
+}
 
 
 
 
 export default {
   getWinesTags,
-  postLogin
+  postLogin,
+  postGuess
 }

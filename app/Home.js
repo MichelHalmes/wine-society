@@ -1,8 +1,6 @@
 import React from 'react';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
 
-
-
 import SortableListView from './SortableListView.js'
 import WineTag from './WineTag.js'
 import client from './client.js'
@@ -12,7 +10,18 @@ export default class PlayerApp extends React.Component {
   constructor(props) {
     super(props)
     this.tags = []
-    this.state = {order: [], data: {}}
+    this.wines_ordered = []
+    this.state = {data: {}}
+  }
+
+  refreshState() {
+    console.log('refreshState')
+    let data = this.tags.reduce((acc, cur, i) => {
+      acc[cur] = this.wines_ordered[i]
+      return acc
+    }, {})
+    this.setState({data})
+
   }
 
   componentDidMount() {
@@ -20,29 +29,20 @@ export default class PlayerApp extends React.Component {
     client.getWinesTags()
       .then(({wines, tags}) => {
         console.log(wines, tags)
-        let data = tags.reduce((acc, cur, i) => {
-          acc[wines[i]] = {tag: cur}
-          return acc;
-        }, {})
         this.tags = tags
-        this.setState({order: wines, data})
-
+        this.wines_ordered = wines
+        this.refreshState()
       })
-
   }
 
   handleRowMove(e) {
-    let order_copy = this.state.order.slice()
-    order_copy.splice(e.to, 0, order_copy.splice(e.from, 1)[0])
-    let data_copy = {}
-    order_copy.forEach((key, i) => {
-      data_copy[key] = {tag: this.tags[i]}
-    })
-    this.setState({
-      order: order_copy,
-      data: data_copy
-    })
-    this.forceUpdate()
+    this.wines_ordered.splice(e.to, 0, this.wines_ordered.splice(e.from, 1)[0])
+    this.refreshState()
+  }
+
+  handleGuessSubmit() {
+    console.log(this.state.data)
+    client.postGuess(this.props.username, this.state.data)
   }
 
   render() {
@@ -64,12 +64,13 @@ export default class PlayerApp extends React.Component {
           <SortableListView
             style={{ flex: 1 }}
             data={this.state.data}
-            order={this.state.order}
+            order={this.tags}
             onRowMoved={e => this.handleRowMove(e)}
-            renderRow={(data, section, index) => <WineTag data={data} index={index}/>}
+            renderRow={(data, section, index) => <WineTag wine={data} tag={index}/>}
           />
-        <Button block success><Text>Submit</Text></Button>
-
+          <Button block success onPress={this.handleGuessSubmit.bind(this)}>
+            <Text>Submit</Text>
+          </Button>
 
         </Content>
         <Footer>
