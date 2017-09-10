@@ -1,48 +1,57 @@
 import React from 'react';
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Footer,
+  FooterTab,
+  Button,
+  Left,
+  Right,
+  Body,
+  Icon,
+  Text,
+} from 'native-base';
 
-import SortableListView from './SortableListView.js'
-import WineTag from './WineTag.js'
-import client from './client.js'
 
+import GuessWines from './GuessWines.js'
+import RevealTag from './RevealTag.js'
+
+
+const PHASES = {
+  GUESS: 'guess',
+  REVEAL: 'reveal'
+}
 
 export default class PlayerApp extends React.Component {
   constructor(props) {
     super(props)
-    this.tags = []
-    this.wines_ordered = []
-    this.state = {data: {}}
+    this.state = {phase: PHASES.GUESS }
   }
 
-  refreshState() {
-    console.log('refreshState')
-    let data = this.tags.reduce((acc, cur, i) => {
-      acc[cur] = this.wines_ordered[i]
-      return acc
-    }, {})
-    this.setState({data})
-
+  nextPhase() {
+    switch(this.state.phase) {
+      case PHASE.GUESS:
+        this.setState({phase: PHASES.REVEAL })
+        break;
+      case PHASE.REVEAL:
+        this.setState({phase: PHASES.GUESS })
+        break;
+      default:
+        throw new Error(`Unrecognised state ${this.state.phase}`)
+    }
   }
 
-  componentDidMount() {
-    console.log('home componentDidMount')
-    client.getWinesTags()
-      .then(({wines, tags}) => {
-        console.log(wines, tags)
-        this.tags = tags
-        this.wines_ordered = wines
-        this.refreshState()
-      })
-  }
-
-  handleRowMove(e) {
-    this.wines_ordered.splice(e.to, 0, this.wines_ordered.splice(e.from, 1)[0])
-    this.refreshState()
-  }
-
-  handleGuessSubmit() {
-    console.log(this.state.data)
-    client.postGuess(this.props.username, this.state.data)
+  getContentComponent(){
+    switch(this.state.phase) {
+      case PHASES.GUESS:
+        return <GuessWines username={this.props.username} nextPhase={this.nextPhase}/>
+      case PHASES.REVEAL:
+        return <RevealTag nextPhase={this.nextPhase}/>
+      default:
+        throw new Error(`Unrecognised state ${this.state.phase}`)
+    }
   }
 
   render() {
@@ -57,21 +66,10 @@ export default class PlayerApp extends React.Component {
           <Body>
             <Title>Cheers {this.props.username}!</Title>
           </Body>
-          <Right />
+          <Right></Right>
         </Header>
         <Content>
-
-          <SortableListView
-            style={{ flex: 1 }}
-            data={this.state.data}
-            order={this.tags}
-            onRowMoved={e => this.handleRowMove(e)}
-            renderRow={(data, section, index) => <WineTag wine={data} tag={index}/>}
-          />
-          <Button block success onPress={this.handleGuessSubmit.bind(this)}>
-            <Text>Submit</Text>
-          </Button>
-
+          {this.getContentComponent()}
         </Content>
         <Footer>
           <FooterTab>
