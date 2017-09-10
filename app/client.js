@@ -8,11 +8,11 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response
   } else {
-    console.error(response)
-    const error = new Error(`Error ${response.status}: ${response.statusText}`)
-    error.status = response.statusText
-    error.response = response
-    throw error
+    const error = new Error(`HTTP Error ${response.statusText}`);
+    error.status = response.statusText;
+    error.response = response;
+    console.log(response);
+    throw error;
   }
 }
 

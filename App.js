@@ -20,14 +20,14 @@ export default class App1 extends React.Component {
     .then(res => {
       console.log('app componentDidMount')
       this.setState({ isReady: true });
-    }).
-    catch(err => {
+    })
+    .catch(err => {
       console.error('app componentDidMount', err)
       throw err
     })
-
-
   }
+
+
   render() {
     if (!this.state.isReady) {
       return <Expo.AppLoading />;
