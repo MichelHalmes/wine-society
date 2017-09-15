@@ -21,7 +21,7 @@ export default class WineTag extends React.Component {
               {this.props.tag}
             </Text>
           </View>
-          <View style={{flex:1,justifyContent: "center",alignItems: "center"}} >
+          <View style={{flex:1, justifyContent: "center",alignItems: "center"}} >
             <Text style={{textAlignVertical: "center",textAlign: "center"}} >
               {this.props.wine}
             </Text>

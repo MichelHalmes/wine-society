@@ -1,6 +1,6 @@
 
 
-const SERVER_HOST_PORT = 'http://10.0.0.4:3000'
+const SERVER_HOST_PORT = 'http://192.168.0.102:3000'
 
 
 function checkStatus(response) {
@@ -16,18 +16,6 @@ function checkStatus(response) {
   }
 }
 
-function getWinesTags() {
-  console.log('getWinesTags')
-  return fetch(`${SERVER_HOST_PORT}/api/wines_tags`, {
-      method: 'get',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-    .then(checkStatus)
-    .then((response) => response.json())
-}
-
 function postLogin(username) {
   console.log('Login')
   return fetch(`${SERVER_HOST_PORT}/api/login`, {
@@ -36,6 +24,18 @@ function postLogin(username) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+      }
+    })
+    .then(checkStatus)
+    .then((response) => response.json())
+}
+
+function getWinesTags() {
+  console.log('getWinesTags')
+  return fetch(`${SERVER_HOST_PORT}/api/wines_tags`, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
       }
     })
     .then(checkStatus)
@@ -56,11 +56,52 @@ function postGuess(username, guess) {
     .then((response) => response.json())
 }
 
+function getRevealTag() {
+  console.log('getRevealTag')
+  return fetch(`${SERVER_HOST_PORT}/api/reveal_tag`, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(checkStatus)
+    .then((response) => response.json())
+}
+
+function postRevealTag(tag, wine) {
+  console.log('Guess')
+  return fetch(`${SERVER_HOST_PORT}/api/reveal_tag`, {
+      method: 'POST',
+      body: JSON.stringify({ tag, wine }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(checkStatus)
+    .then((response) => response.json())
+}
+
+function getPoints(username) {
+  console.log('Guess')
+  return fetch(`${SERVER_HOST_PORT}/api/points/${username}`, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(checkStatus)
+    .then((response) => response.json())
+}
+
 
 
 
 export default {
-  getWinesTags,
   postLogin,
-  postGuess
+  getWinesTags,
+  postGuess,
+  getRevealTag,
+  postRevealTag,
+  getPoints
 }

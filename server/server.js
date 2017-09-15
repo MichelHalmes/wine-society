@@ -16,16 +16,15 @@ const NB_ROUNDS = 4 // Number of actual bottles in the game
 
 // ===== STATE =====
 
-let TAGS = {'1': null, '2': null, '3': null, '4': null, 'X': null}
+let TAGS = {'1': 'Merlot', '2': 'Pinotage', '3': null, '4': null, 'X': null}
 let PLAYERS = {
   'Mich':{
-    points: 0,
+    points: 4,
     'guesses': [,{
       "1": "Merlot",
       "2": "Shiraz",
       "3": "Pinotage",
-      "4": "Cabernet Sauvignon",
-      "X": "Pinot Noir"
+      "4": "Cabernet Sauvignon"
     }]},
   'Pete':{
     points: 0,
@@ -33,8 +32,7 @@ let PLAYERS = {
       '1': 'Merlot',
       '3': 'Shiraz',
       '2': 'Pinotage',
-      'X': 'Cabernet Sauvignon',
-      '4': 'Pinot Noir'
+      'X': 'Cabernet Sauvignon'
     }]}
 }
 let CURR_ROUND = 1
@@ -64,7 +62,6 @@ app.get('/api/wines_tags', function (req, res) {
     .filter(wine => Object.values(TAGS).indexOf(wine) < 0 )
   const tags_to_guess = Object.keys(TAGS)
     .filter(tag => TAGS[tag] === null )
-
   res.json({
     wines: wines_to_guess,
     tags: tags_to_guess
@@ -73,12 +70,19 @@ app.get('/api/wines_tags', function (req, res) {
 
 app.post('/api/guess', function (req, res, next) {
   const username = req.body.username
-  const guess = req.body.guess
+  let guess = req.body.guess
   console.log('/api/guess', username, guess, PLAYERS[username])
   if (PLAYERS[username] === undefined) {
     console.error('Unrecognized user!', username)
     return res.status(404).send(`Unrecognized user: ${username}`);
   }
+
+  guess = Object.keys(guess).reduce((acc, tag) => {
+    if (tag!='X' && TAGS.indexOf(tag)>=0){
+      acc[tag] = guess[tag]
+    }
+    return acc
+  }, {})
   PLAYERS[username].guesses[CURR_ROUND] = guess
   CURR_PHASE = PHASES.REVEAL
   if (Object.values(PLAYERS).some(player => player.guesses[CURR_ROUND]===undefined)) {
@@ -144,7 +148,11 @@ app.post('/api/guess', function (req, res, next) {
 
 app.get('/api/reveal_tag', function (req, res) {
   console.log('/api/reveal_tag')
-  res.json({ phase: CURR_PHASE, reveal_tag: CURR_REVEAL_TAG })
+  res.json({
+    phase: CURR_PHASE,
+    reveal_tag: CURR_REVEAL_TAG,
+    wines: WINES.filter(wine => Object.values(TAGS).indexOf(wine) < 0)
+  })
 })
 
 app.post('/api/reveal_tag', function (req, res, next) {
@@ -160,8 +168,8 @@ app.post('/api/reveal_tag', function (req, res, next) {
     return res.status(404).send(`Nothing to reveal`);
   }
   if (WINES.indexOf(wine) < 0) {
-    console.error(`Wine does not exist: ${tag}`)
-    return res.status(404).send(`Wine does not exist: ${tag}`);
+    console.error(`Wine does not exist: ${wine}`)
+    return res.status(404).send(`Wine does not exist: ${wine}`);
   }
 
   CURR_REVEAL_TAG =  null
@@ -195,7 +203,8 @@ app.get('/api/points/:username', function (req, res) {
     .map((guess, round) =>
       Object.keys(guess)
         .reduce((summary_acc, tag) => {
-          summary_acc[tag] = TAGS[tag] && (guess[tag]==TAGS[tag]? NB_ROUNDS-round+1 : 0)
+          const points = TAGS[tag] && (guess[tag]==TAGS[tag]? NB_ROUNDS-round+1 : 0)
+          summary_acc[tag] = {points, wine: guess[tag]}
           return summary_acc
         }
         , {}))

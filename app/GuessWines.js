@@ -22,7 +22,7 @@ export default class GuessWines extends React.Component {
   }
 
   refreshState() {
-    console.log('refreshState')
+    // console.log('refreshState')
     let data = this.tags.reduce((acc, cur, i) => {
       acc[cur] = this.wines_ordered[i]
       return acc
@@ -31,7 +31,7 @@ export default class GuessWines extends React.Component {
   }
 
   componentDidMount() {
-    console.log('home componentDidMount')
+    console.log('guesswines componentDidMount')
     client.getWinesTags()
       .then(({wines, tags}) => {
         console.log(wines, tags)
