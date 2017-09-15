@@ -28,6 +28,9 @@
     "react-mixin": "^2.0.2",
     "react-native": "^0.47.0",
     "react-navigation": "^1.0.0-beta.11",
-    "react-timer-mixin": "^0.13.3"
+    "react-redux": "^5.0.6",
+    "react-timer-mixin": "^0.13.3",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.2.0"
   }
 }

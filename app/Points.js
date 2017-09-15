@@ -17,8 +17,9 @@ import {
 } from 'native-base'
 
 import { View } from 'react-native'
-import client from './client.js'
 import _ from 'lodash'
+
+import client from './client.js'
 
 
 export default class Points extends React.Component {

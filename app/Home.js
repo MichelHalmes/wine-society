@@ -12,8 +12,7 @@ import {
   Body,
   Icon,
   Text,
-} from 'native-base';
-
+} from 'native-base'
 
 import GuessWines from './GuessWines.js'
 import RevealTag from './RevealTag.js'
