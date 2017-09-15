@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import { connect } from 'react-redux'
 import {
   Text,
   Spinner,
@@ -17,9 +18,10 @@ import { View } from 'react-native'
 // import TimerMixin from 'react-timer-mixin'
 
 import client from './client.js'
+import { nextPhaseAC } from './my_redux.js'
 
 
-export default class RevealTag extends React.Component {
+class RevealTag extends React.Component {
   constructor(props) {
     super(props)
     this.state = {reveal_tag: null, wines: [], selected_wine: null}
@@ -35,7 +37,7 @@ export default class RevealTag extends React.Component {
       .then(({phase, reveal_tag, wines}) => {
         console.log('checkRevealTag', phase, reveal_tag)
         if (phase != 'reveal') {
-          this.props.nextPhase()
+          this.props.dispatch(nextPhaseAC())
         } else if (!reveal_tag) {
           // this.setTimeout(this.checkRevealTag, 2000)
         } else {
@@ -52,7 +54,8 @@ export default class RevealTag extends React.Component {
     client.postRevealTag(this.state.reveal_tag, this.state.selected_wine)
       .then(res => {
         if (res.ok) {
-          this.props.nextPhase()
+          this.props.navigation.navigate('Points')
+          this.props.dispatch(nextPhaseAC())
         }
       })
   }
@@ -95,3 +98,6 @@ export default class RevealTag extends React.Component {
 }
 
 // reactMixin(RevealTag.prototype, TimerMixin);
+
+
+export default connect()(RevealTag)

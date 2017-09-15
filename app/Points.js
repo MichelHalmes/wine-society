@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import { connect } from 'react-redux'
 import {
   Text,
   Spinner,
@@ -21,11 +22,14 @@ import _ from 'lodash'
 
 import client from './client.js'
 
-
-export default class Points extends React.Component {
+class Points extends React.Component {
   constructor(props) {
     super(props)
     this.state = {points: null, summary: null, }
+  }
+
+  static navigationOptions = {
+    title: 'Points',
   }
 
   componentDidMount() {
@@ -58,17 +62,16 @@ export default class Points extends React.Component {
         </View>
       )
     }
+
     return(
       <View>
-        <Card>
-          <CardItem>
-            <Body>
-              <H3 style={{textAlign: 'center', marginTop: 5}}>
-                You have {this.state.points} points!
-              </H3>
-            </Body>
-          </CardItem>
-        </Card>
+        <CardItem>
+          <H3 style={{textAlign: 'center', marginTop: 5}}>
+            You have {this.state.points} points!
+          </H3>
+        </CardItem>
+
+
         <List>
           {this.state.summary
             .filter(round => !!round)
@@ -94,3 +97,9 @@ export default class Points extends React.Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {username: state.usernameReducer}
+}
+
+export default connect(mapStateToProps)(Points)

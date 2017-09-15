@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import { connect } from 'react-redux'
 import {
   Button,
   Text,
@@ -10,10 +11,12 @@ import { View } from 'react-native'
 
 import SortableListView from './SortableListView.js'
 import WineTag from './WineTag.js'
+
 import client from './client.js'
+import { nextPhaseAC } from './my_redux.js'
 
 
-export default class GuessWines extends React.Component {
+class GuessWines extends React.Component {
   constructor(props) {
     super(props)
     this.tags = []
@@ -47,7 +50,7 @@ export default class GuessWines extends React.Component {
   }
 
   handleGuessSubmit() {
-    console.log(this.state.data)
+    console.log('handleGuessSubmit', this.state.data, this.props)
     client.postGuess(this.props.username, this.state.data)
       .then(res => {
         console.log('Submitted guess', res.ok)
@@ -55,7 +58,7 @@ export default class GuessWines extends React.Component {
     this.tags = []
     this.wines_ordered = []
     this.setState({data: {}})
-    this.props.nextPhase()
+    this.props.dispatch(nextPhaseAC())
   }
 
   render() {
@@ -86,3 +89,9 @@ export default class GuessWines extends React.Component {
     }
   }
 }
+
+function mapStateToProps(state) {
+  return {username: state.usernameReducer}
+}
+
+export default connect(mapStateToProps)(GuessWines)

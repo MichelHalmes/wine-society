@@ -13,67 +13,59 @@ import {
   Icon,
   Text,
 } from 'native-base'
+import { StackNavigator } from 'react-navigation'
+import { connect } from 'react-redux'
 
 import GuessWines from './GuessWines.js'
 import RevealTag from './RevealTag.js'
 import Points from './Points.js'
 
 
-const PHASES = {
-  GUESS: 'guess',
-  REVEAL: 'reveal',
-  POINTS: 'points'
-}
+import {PHASES} from './my_redux.js'
 
-export default class Home extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {phase: PHASES.POINTS }
-  }
+class Main extends React.Component {
+  static navigationOptions = ({navigation}) => ({
+    title: 'App',
+    headerLeft: (
+      <Button transparent onPress={() => navigation.navigate('Points')}>
+        <Icon name='menu' />
+      </Button>
+    )
+  });
 
-  nextPhase() {
-    switch(this.state.phase) {
-      case PHASES.GUESS:
-        this.setState({phase: PHASES.REVEAL })
-        break;
-      case PHASES.REVEAL:
-        this.setState({phase: PHASES.POINTS })
-        break;
-      case PHASES.POINTS:
-        this.setState({phase: PHASES.GUESS })
-        break;
-      default:
-        throw new Error(`Unrecognised state ${this.state.phase}`)
-    }
-  }
 
   getContentComponent(){
-    console.log('home componentDidMount', this.state)
-    switch(this.state.phase) {
+    console.log('home componentDidMount', this.props)
+    switch(this.props.phase) {
       case PHASES.GUESS:
-        return <GuessWines username={this.props.username} nextPhase={this.nextPhase.bind(this)}/>
+        return <GuessWines />
       case PHASES.REVEAL:
-        return <RevealTag nextPhase={this.nextPhase.bind(this)}/>
-      case PHASES.POINTS:
-        return <Points username={this.props.username} nextPhase={this.nextPhase.bind(this)}/>
+        return <RevealTag navigation={this.props.navigation}/>
       default:
-        throw new Error(`Unrecognised state ${this.state.phase}`)
+        throw new Error(`Unrecognised state ${this.props.phase}`)
     }
+  }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.phase==PHASES.GUESS && prevProps.phase==PHASES.REVEAL) {
+  //     const { navigate } = this.props.navigation;
+  //     navigate('Points')
+  //   }
+  // }
+
+  showPoints() {
+    const { navigate } = this.props.navigation;
+    navigate('Points')
   }
 
   render() {
+
     return (
       <Container>
         <Header>
-          <Left>
-            <Button transparent>
-              <Icon name='menu' />
-            </Button>
-          </Left>
           <Body>
             <Title>Cheers {this.props.username}!</Title>
           </Body>
-          <Right></Right>
         </Header>
         <Content>
           {this.getContentComponent()}
@@ -89,3 +81,15 @@ export default class Home extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    username: state.usernameReducer,
+    phase: state.phaseReducer
+  }
+}
+
+export default StackNavigator({
+  Main: { screen: connect(mapStateToProps)(Main) },
+  Points: { screen: Points },
+})

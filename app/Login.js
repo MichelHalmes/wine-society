@@ -12,6 +12,10 @@ class Login extends React.Component {
     this.state = {text: undefined, error: false};
   }
 
+  // static navigationOptions = {
+  //   title: 'Login',
+  // };
+
   handleChangeText(text) {
     this.setState({text, error: false})
   }

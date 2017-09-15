@@ -16,24 +16,24 @@ const NB_ROUNDS = 4 // Number of actual bottles in the game
 
 // ===== STATE =====
 
-let TAGS = {'1': 'Merlot', '2': 'Pinotage', '3': null, '4': null, 'X': null}
+let TAGS = {'1': null, '2': null, '3': null, '4': null, 'X': null}
 let PLAYERS = {
-  'Mich':{
-    points: 4,
-    'guesses': [,{
-      "1": "Merlot",
-      "2": "Shiraz",
-      "3": "Pinotage",
-      "4": "Cabernet Sauvignon"
-    }]},
-  'Pete':{
-    points: 0,
-    'guesses': [,{
-      '1': 'Merlot',
-      '3': 'Shiraz',
-      '2': 'Pinotage',
-      'X': 'Cabernet Sauvignon'
-    }]}
+  // 'Mich':{
+  //   points: 4,
+  //   'guesses': [,{
+  //     "1": "Merlot",
+  //     "2": "Shiraz",
+  //     "3": "Pinotage",
+  //     "4": "Cabernet Sauvignon"
+  //   }]},
+  // 'Pete':{
+  //   points: 0,
+  //   'guesses': [,{
+  //     '1': 'Merlot',
+  //     '3': 'Shiraz',
+  //     '2': 'Pinotage',
+  //     'X': 'Cabernet Sauvignon'
+  //   }]}
 }
 let CURR_ROUND = 1
 let CURR_PHASE = PHASES.GUESS
@@ -78,7 +78,7 @@ app.post('/api/guess', function (req, res, next) {
   }
 
   guess = Object.keys(guess).reduce((acc, tag) => {
-    if (tag!='X' && TAGS.indexOf(tag)>=0){
+    if (tag!='X' && Object.keys(TAGS).indexOf(tag)>=0){
       acc[tag] = guess[tag]
     }
     return acc
