@@ -18,11 +18,10 @@ export default class App1 extends React.Component {
       Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
     })
     .then(res => {
-      console.log('app componentDidMount')
       this.setState({ isReady: true });
     })
     .catch(err => {
-      console.error('app componentDidMount', err)
+      console.error('Error when mounting app component', err)
       throw err
     })
   }

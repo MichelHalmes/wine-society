@@ -21,7 +21,6 @@ class Login extends React.Component {
   }
 
   handleLoginSubmit() {
-    console.log('login submit')
     if (this.state.text && this.state.text.length > 2){
       this.props.dispatch(postLoginAC(this.state.text))
     } else {

@@ -25,7 +25,6 @@ class GuessWines extends React.Component {
   }
 
   refreshState() {
-    // console.log('refreshState')
     let data = this.tags.reduce((acc, cur, i) => {
       acc[cur] = this.wines_ordered[i]
       return acc
@@ -34,10 +33,8 @@ class GuessWines extends React.Component {
   }
 
   componentDidMount() {
-    console.log('guesswines componentDidMount')
     client.getWinesTags()
       .then(({wines, tags}) => {
-        console.log(wines, tags)
         this.tags = tags
         this.wines_ordered = wines
         this.refreshState()
@@ -50,11 +47,8 @@ class GuessWines extends React.Component {
   }
 
   handleGuessSubmit() {
-    console.log('handleGuessSubmit', this.state.data, this.props)
     client.postGuess(this.props.username, this.state.data)
-      .then(res => {
-        console.log('Submitted guess', res.ok)
-      })
+      .then(res => { res.ok })
     this.tags = []
     this.wines_ordered = []
     this.setState({data: {}})

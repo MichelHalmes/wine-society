@@ -28,14 +28,12 @@ class RevealTag extends React.Component {
   }
 
   componentDidMount() {
-    console.log('guesswines componentDidMount')
     this.checkRevealTag()
   }
 
   checkRevealTag() {
     client.getRevealTag()
       .then(({phase, reveal_tag, wines}) => {
-        console.log('checkRevealTag', phase, reveal_tag)
         if (phase != 'reveal') {
           this.props.dispatch(nextPhaseAC())
         } else if (!reveal_tag) {

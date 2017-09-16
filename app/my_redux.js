@@ -6,9 +6,7 @@ const REQUEST_POST_LOGIN = 'REQUEST_POST_LOGIN'
 const RECEIVE_POST_LOGIN = 'RECEIVE_POST_LOGIN'
 
 export function postLoginAC(username) {
-  console.log('1 postLoginAc')
   return dispatch => {
-    console.log('disp postLoginAc')
     dispatch({ type: REQUEST_POST_LOGIN, username })
     return client.postLogin(username)
       .then(json => dispatch({ type: REQUEST_POST_LOGIN, username }))

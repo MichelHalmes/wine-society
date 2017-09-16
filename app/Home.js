@@ -35,7 +35,6 @@ class Main extends React.Component {
 
 
   getContentComponent(){
-    console.log('home componentDidMount', this.props)
     switch(this.props.phase) {
       case PHASES.GUESS:
         return <GuessWines />

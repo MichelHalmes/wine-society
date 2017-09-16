@@ -33,7 +33,6 @@ class Points extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Points componentDidMount')
     client.getPoints(this.props.username)
       .then(res => {
         this.setState({points: res.points, summary: res.summary})
@@ -70,8 +69,6 @@ class Points extends React.Component {
             You have {this.state.points} points!
           </H3>
         </CardItem>
-
-
         <List>
           {this.state.summary
             .filter(round => !!round)

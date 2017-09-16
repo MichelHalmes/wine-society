@@ -4,6 +4,18 @@ const bodyParser = require('body-parser')
 const app = express()
 app.use( bodyParser.json() );
 
+app.use(function (req, res, next) {
+  const date = new Date().toISOString().slice(0,19)
+  console.log(date, req.method, req.originalUrl, JSON.stringify(req.body))
+  var rEnd = res.end;
+  res.end = function(chunk, encoding, callback) {
+    console.log(res.statusCode, chunk.toString('utf8'));
+    rEnd.apply(this, arguments);
+  }
+
+  next()
+})
+
 // ===== STATE =====
 
 const PHASES = {
@@ -42,9 +54,8 @@ let CURR_REVEAL_TAG = null
 // ===== ENDPOINTS =====
 
 
-app.post('/api/login', function (req, res) {
+app.post('/api/login', function (req, res, next) {
   const username = req.body.username
-  console.log('/api/login', username)
   let already_exists
   if (PLAYERS[username]) {
     already_exists = true
@@ -53,11 +64,10 @@ app.post('/api/login', function (req, res) {
     PLAYERS[username] = {points: 0, guesses: []}
   }
   res.json({already_exists})
-  console.log(PLAYERS)
+  next()
 })
 
-app.get('/api/wines_tags', function (req, res) {
-  console.log('/api/wines_tags')
+app.get('/api/wines_tags', function (req, res, next) {
   const wines_to_guess = WINES
     .filter(wine => Object.values(TAGS).indexOf(wine) < 0 )
   const tags_to_guess = Object.keys(TAGS)
@@ -66,14 +76,13 @@ app.get('/api/wines_tags', function (req, res) {
     wines: wines_to_guess,
     tags: tags_to_guess
   })
+  next()
 })
 
 app.post('/api/guess', function (req, res, next) {
   const username = req.body.username
   let guess = req.body.guess
-  console.log('/api/guess', username, guess, PLAYERS[username])
   if (PLAYERS[username] === undefined) {
-    console.error('Unrecognized user!', username)
     return res.status(404).send(`Unrecognized user: ${username}`);
   }
 
@@ -86,13 +95,10 @@ app.post('/api/guess', function (req, res, next) {
   PLAYERS[username].guesses[CURR_ROUND] = guess
   CURR_PHASE = PHASES.REVEAL
   if (Object.values(PLAYERS).some(player => player.guesses[CURR_ROUND]===undefined)) {
-    console.log(`Waiting for guesses in round ${CURR_ROUND}`)
-    return res.json({ok: true})
+    return res.json({ok: true, msg: `Waiting for guesses in round ${CURR_ROUND}`})
   }
-  console.log(`All players have guessed for round ${CURR_ROUND}`)
   if (CURR_REVEAL_TAG) {
-    console.log(`Reusing exiting RevealTag`)
-    return res.json({ok: true})
+    return res.json({ok: true, msg: `Reusing exiting RevealTag`})
   }
 
   const guesses_per_tag = Object.values(PLAYERS)
@@ -116,9 +122,7 @@ app.post('/api/guess', function (req, res, next) {
           return acc_counts;
         }, {})
       return guess_counts_list
-      console.log(guess_counts_list, tag)
     })
-  console.log('guess_counts_list', guess_counts_list)
 
   const entropies = guess_counts_list
     .map(guess_counts => {
@@ -131,7 +135,6 @@ app.post('/api/guess', function (req, res, next) {
       return entropy
     })
 
-  console.log('entropies',entropies)
   const lowest_entropy_idx = Object.keys(entropies)
     .reduce((a, b) => {
       return entropies[a] == entropies[b] ?
@@ -139,15 +142,13 @@ app.post('/api/guess', function (req, res, next) {
         (entropies[a] < entropies[b] ? a : b)
     })
   const tag_to_reveal = Object.keys(guesses_per_tag)[lowest_entropy_idx]
-  console.log(tag_to_reveal)
 
   CURR_REVEAL_TAG = tag_to_reveal
 
-  res.json({ok: true})
+  res.json({ok: true, msg: `All players have guessed for round ${CURR_ROUND}! Reveal ${CURR_REVEAL_TAG}!`})
 })
 
 app.get('/api/reveal_tag', function (req, res) {
-  console.log('/api/reveal_tag')
   res.json({
     phase: CURR_PHASE,
     reveal_tag: CURR_REVEAL_TAG,
@@ -158,17 +159,13 @@ app.get('/api/reveal_tag', function (req, res) {
 app.post('/api/reveal_tag', function (req, res, next) {
   const tag = req.body.tag
   const wine = req.body.wine
-  console.log('/api/reveal_tag -- post', tag, wine)
   if (CURR_REVEAL_TAG != tag) {
-    console.error(`Revealed wrong tag: ${tag} vs ${CURR_REVEAL_TAG}`)
     return res.status(404).send(`Revealed wrong tag: ${tag} vs ${CURR_REVEAL_TAG}`);
   }
   if (CURR_PHASE != PHASES.REVEAL) {
-    console.error(`Nothing to reveal`)
     return res.status(404).send(`Nothing to reveal`);
   }
   if (WINES.indexOf(wine) < 0) {
-    console.error(`Wine does not exist: ${wine}`)
     return res.status(404).send(`Wine does not exist: ${wine}`);
   }
 
@@ -184,7 +181,6 @@ app.post('/api/reveal_tag', function (req, res, next) {
       .reduce((points_acc, round_points) => points_acc += round_points, 0)
     player.points = total_points
   })
-  console.log(PLAYERS)
 
   CURR_ROUND += 1
 
@@ -193,10 +189,8 @@ app.post('/api/reveal_tag', function (req, res, next) {
 
 app.get('/api/points/:username', function (req, res) {
   const username = req.params.username
-  console.log('/api/points', username)
   const player = PLAYERS[username]
   if (player === undefined) {
-    console.error(`Username ${username} not found`)
     return res.status(404).send(`Username '${username}' not found`);
   }
   let summary = player.guesses
@@ -208,9 +202,6 @@ app.get('/api/points/:username', function (req, res) {
           return summary_acc
         }
         , {}))
-
-    console.log(summary)
-
 
   res.json({ points: player.points, summary })
 })
