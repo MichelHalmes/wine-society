@@ -176,12 +176,14 @@ app.post('/api/reveal_tag', function (req, res, next) {
 
   Object.values(PLAYERS).forEach(player => {
     const total_points = player.guesses
-      .map(guess =>
+      .map((guess, round) =>
         Object.keys(guess)
-          .reduce((points_acc, tag) => points_acc += guess[tag]==TAGS[tag]? NB_ROUNDS-CURR_ROUND+1 : 0, 0))
+          .reduce((points_acc, tag) => points_acc += guess[tag]==TAGS[tag]? NB_ROUNDS-round+1 : 0, 0))
       .reduce((points_acc, round_points) => points_acc += round_points, 0)
     player.points = total_points
+    console.log(player)
   })
+
 
   CURR_ROUND += 1
 

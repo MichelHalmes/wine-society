@@ -13,10 +13,11 @@ import {
   CardItem,
   Body,
   Icon,
-  Badge
+  Badge,
+  Text
 } from 'native-base'
 
-import {Text, View, ScrollView } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import _ from 'lodash'
 
 import client from './client.js'
@@ -77,8 +78,8 @@ class Points extends React.Component {
                 </ListItem>
                 {Object.keys(round).map((tag, i) =>
                   <ListItem key={i}>
-                    <Badge style={{ backgroundColor: 'maroon' }}>
-                      <Text>{tag}</Text>
+                    <Badge style={{ backgroundColor: 'maroon',  margin: 5 }}>
+                      <Text >{tag}</Text>
                     </Badge>
                     <Text>  {round[tag].wine}  </Text>
                     {this.getIcon(round[tag].points)}

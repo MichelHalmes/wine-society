@@ -59,7 +59,7 @@ class Main extends React.Component {
             <Title>Cheers {this.props.username}!</Title>
           </Body>
         </Header>
-        <Content>
+        <Content padded>
           {this.getContentComponent()}
         </Content>
         <Footer>
