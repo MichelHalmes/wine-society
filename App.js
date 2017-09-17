@@ -3,7 +3,7 @@ import React from "react";
 
 import Root  from './app/Root.js';
 
-export default class App1 extends React.Component {
+export default class App extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -40,3 +40,5 @@ export default class App1 extends React.Component {
 // https://github.com/saberking/react-native-draggable-list
 
 // http://ionicons.com/
+
+// https://scotch.io/tutorials/react-on-the-server-for-beginners-build-a-universal-react-and-node-app

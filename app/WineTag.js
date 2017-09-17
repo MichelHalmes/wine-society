@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 import { View, TouchableHighlight } from 'react-native'
 import { Badge, Text } from 'native-base'

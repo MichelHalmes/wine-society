@@ -9,7 +9,8 @@ import {
 
 import { View } from 'react-native'
 
-import SortableListView from './SortableListView.js'
+// import SortableListView from './SortableListView.js'
+import SortableListView from './SortableListViewSimple.js'
 import WineTag from './WineTag.js'
 
 import client from './client.js'

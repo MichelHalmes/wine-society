@@ -161,13 +161,13 @@ app.post('/api/reveal_tag', function (req, res, next) {
   const tag = req.body.tag
   const wine = req.body.wine
   if (CURR_REVEAL_TAG != tag) {
-    return res.status(404).send(`Revealed wrong tag: ${tag} vs ${CURR_REVEAL_TAG}`);
+    return res.status(406).send(`Revealed wrong tag: ${tag} vs ${CURR_REVEAL_TAG}`);
   }
   if (CURR_PHASE != PHASES.REVEAL) {
-    return res.status(404).send(`Nothing to reveal`);
+    return res.status(405).send(`Nothing to reveal`);
   }
   if (WINES.indexOf(wine) < 0) {
-    return res.status(404).send(`Wine does not exist: ${wine}`);
+    return res.status(400).send(`Wine does not exist: ${wine}`);
   }
 
   CURR_REVEAL_TAG =  null
@@ -181,9 +181,7 @@ app.post('/api/reveal_tag', function (req, res, next) {
           .reduce((points_acc, tag) => points_acc += guess[tag]==TAGS[tag]? NB_ROUNDS-round+1 : 0, 0))
       .reduce((points_acc, round_points) => points_acc += round_points, 0)
     player.points = total_points
-    console.log(player)
   })
-
 
   CURR_ROUND += 1
 

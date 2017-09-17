@@ -13,7 +13,7 @@ export function postLoginAC(username) {
   }
 }
 
-function usernameReducer(state = null, action) {
+function usernameReducer(state = 'Mich', action) {
   switch (action.type) {
     case REQUEST_POST_LOGIN:
       return action.username
