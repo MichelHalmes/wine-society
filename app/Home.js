@@ -45,13 +45,6 @@ class Main extends React.Component {
     }
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.phase==PHASES.GUESS && prevProps.phase==PHASES.REVEAL) {
-  //     const { navigate } = this.props.navigation;
-  //     navigate('Points')
-  //   }
-  // }
-
   showPoints() {
     const { navigate } = this.props.navigation;
     navigate('Points')

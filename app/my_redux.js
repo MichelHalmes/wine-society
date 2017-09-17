@@ -9,7 +9,7 @@ export function postLoginAC(username) {
   return dispatch => {
     dispatch({ type: REQUEST_POST_LOGIN, username })
     return client.postLogin(username)
-      .then(json => dispatch({ type: REQUEST_POST_LOGIN, username }))
+      .then(json => dispatch({ type: RECEIVE_POST_LOGIN, username }))
   }
 }
 

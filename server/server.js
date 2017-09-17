@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const _ = require('lodash')
 
 const app = express()
 app.use( bodyParser.json() );
@@ -55,7 +56,7 @@ let CURR_REVEAL_TAG = null
 
 
 app.post('/api/login', function (req, res, next) {
-  const username = req.body.username
+  const username = _.trim(req.body.username).toLowerCase()
   let already_exists
   if (PLAYERS[username]) {
     already_exists = true
@@ -80,7 +81,7 @@ app.get('/api/wines_tags', function (req, res, next) {
 })
 
 app.post('/api/guess', function (req, res, next) {
-  const username = req.body.username
+  const username = _.trim(req.body.username).toLowerCase()
   let guess = req.body.guess
   if (PLAYERS[username] === undefined) {
     return res.status(404).send(`Unrecognized user: ${username}`);
@@ -140,7 +141,7 @@ app.post('/api/guess', function (req, res, next) {
       return entropies[a] == entropies[b] ?
         (Math.random() < .5 ? a : b):
         (entropies[a] < entropies[b] ? a : b)
-    })
+    }, 0)
   const tag_to_reveal = Object.keys(guesses_per_tag)[lowest_entropy_idx]
 
   CURR_REVEAL_TAG = tag_to_reveal
@@ -188,7 +189,7 @@ app.post('/api/reveal_tag', function (req, res, next) {
 })
 
 app.get('/api/points/:username', function (req, res) {
-  const username = req.params.username
+  const username = _.trim(req.params.username).toLowerCase()
   const player = PLAYERS[username]
   if (player === undefined) {
     return res.status(404).send(`Username '${username}' not found`);

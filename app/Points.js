@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {
-  Text,
   Spinner,
   H3,
   Form,
@@ -17,7 +16,7 @@ import {
   Badge
 } from 'native-base'
 
-import { View } from 'react-native'
+import {Text, View, ScrollView } from 'react-native'
 import _ from 'lodash'
 
 import client from './client.js'
@@ -33,6 +32,7 @@ class Points extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props)
     client.getPoints(this.props.username)
       .then(res => {
         this.setState({points: res.points, summary: res.summary})
@@ -63,13 +63,11 @@ class Points extends React.Component {
     }
 
     return(
-      <View>
-        <CardItem>
-          <H3 style={{textAlign: 'center', marginTop: 5}}>
-            You have {this.state.points} points!
-          </H3>
-        </CardItem>
-        <List>
+      <ScrollView>
+        <Text style={{textAlign: 'center', padding: 5, fontSize: 20, fontWeight: 'bold'}}>
+          You have {this.state.points} points!
+        </Text>
+        <List >
           {this.state.summary
             .filter(round => !!round)
             .map((round, i) =>
@@ -90,7 +88,7 @@ class Points extends React.Component {
             )
           }
         </List>
-      </View>
+      </ScrollView>
     )
   }
 }
