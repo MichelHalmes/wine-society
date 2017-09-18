@@ -14,8 +14,8 @@ import {
 
 import { View } from 'react-native'
 
-// import reactMixin from 'react-mixin'
-// import TimerMixin from 'react-timer-mixin'
+import reactMixin from 'react-mixin'
+import TimerMixin from 'react-timer-mixin'
 
 import client from './client.js'
 import { nextPhaseAC } from './my_redux.js'
@@ -37,7 +37,7 @@ class RevealTag extends React.Component {
         if (phase != 'reveal') {
           this.props.dispatch(nextPhaseAC())
         } else if (!reveal_tag) {
-          // this.setTimeout(this.checkRevealTag, 2000)
+          this.setTimeout(this.checkRevealTag, 2000)
         } else {
           this.setState({reveal_tag, wines, selected_wine: undefined})
         }
@@ -95,7 +95,7 @@ class RevealTag extends React.Component {
   }
 }
 
-// reactMixin(RevealTag.prototype, TimerMixin);
+reactMixin(RevealTag.prototype, TimerMixin);
 
 
 export default connect()(RevealTag)

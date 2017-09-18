@@ -88,7 +88,7 @@ app.post('/api/guess', function (req, res, next) {
   }
 
   guess = Object.keys(guess).reduce((acc, tag) => {
-    if (tag!='X' && Object.keys(TAGS).indexOf(tag)>=0){
+    if (tag!='X' && TAGS[tag]===null){
       acc[tag] = guess[tag]
     }
     return acc

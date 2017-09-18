@@ -48,17 +48,22 @@ class GuessWines extends React.Component {
   }
 
   handleGuessSubmit() {
+    this.tags = []
+    this.setState({data: {}})
+    this.props.dispatch(nextPhaseAC())
+    this.wines_ordered = []
     client.postGuess(this.props.username, this.state.data)
-      .then(res => { res.ok })
+      .then(res => {
+      })
       .catch(err => {
         if (err.status == 404) {
           this.props.dispatch(resetUsernameAC())
+        } else {
+          throw err
         }
       })
-    this.tags = []
-    this.wines_ordered = []
-    this.setState({data: {}})
-    this.props.dispatch(nextPhaseAC())
+
+
   }
 
   render() {
