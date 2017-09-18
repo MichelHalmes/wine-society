@@ -14,7 +14,7 @@ import SortableListView from './SortableListViewSimple.js'
 import WineTag from './WineTag.js'
 
 import client from './client.js'
-import { nextPhaseAC } from './my_redux.js'
+import { nextPhaseAC, resetUsernameAC } from './my_redux.js'
 
 
 class GuessWines extends React.Component {
@@ -50,6 +50,11 @@ class GuessWines extends React.Component {
   handleGuessSubmit() {
     client.postGuess(this.props.username, this.state.data)
       .then(res => { res.ok })
+      .catch(err => {
+        if (err.status == 404) {
+          this.props.dispatch(resetUsernameAC())
+        }
+      })
     this.tags = []
     this.wines_ordered = []
     this.setState({data: {}})

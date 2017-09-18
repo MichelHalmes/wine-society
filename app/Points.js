@@ -20,6 +20,7 @@ import {
 import { View, ScrollView } from 'react-native'
 import _ from 'lodash'
 
+import { resetUsernameAC } from './my_redux.js'
 import client from './client.js'
 
 class Points extends React.Component {
@@ -37,6 +38,11 @@ class Points extends React.Component {
     client.getPoints(this.props.username)
       .then(res => {
         this.setState({points: res.points, summary: res.summary})
+      })
+      .catch(err => {
+        if (err.status == 404) {
+          this.props.dispatch(resetUsernameAC())
+        }
       })
   }
 

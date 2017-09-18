@@ -5,6 +5,7 @@ import client from './client.js'
 const REQUEST_POST_LOGIN = 'REQUEST_POST_LOGIN'
 const RECEIVE_POST_LOGIN = 'RECEIVE_POST_LOGIN'
 
+
 export function postLoginAC(username) {
   return dispatch => {
     dispatch({ type: REQUEST_POST_LOGIN, username })
@@ -13,10 +14,18 @@ export function postLoginAC(username) {
   }
 }
 
+const RESET_USERNAME = 'RESET_USERNAME'
+export function resetUsernameAC(username) {
+  return {type: RESET_USERNAME}
+}
+
+
 function usernameReducer(state = 'Mich', action) {
   switch (action.type) {
     case REQUEST_POST_LOGIN:
       return action.username
+    case RESET_USERNAME:
+      return null
     default:
       return state
   }
