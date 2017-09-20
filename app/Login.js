@@ -12,10 +12,6 @@ class Login extends React.Component {
     this.state = {text: undefined, error: false};
   }
 
-  // static navigationOptions = {
-  //   title: 'Login',
-  // };
-
   handleChangeText(text) {
     this.setState({text, error: false})
   }
@@ -26,24 +22,23 @@ class Login extends React.Component {
     } else {
       this.setState({error: true})
     }
-
   }
 
   render() {
     return (
       <Container>
         <Header />
-        <Content>
-          <Form>
+        <Content style={{margin: 10, marginTop: 20}} >
+          <Form >
             <Item floatingLabel error={this.state.error}>
               <Label>Username</Label>
               <Input onChangeText={this.handleChangeText.bind(this)} value={this.state.text}/>
             </Item>
+            <Button
+              title="Submit"
+              onPress={this.handleLoginSubmit.bind(this)}
+            />
           </Form>
-          <Button
-            title="Submit"
-            onPress={this.handleLoginSubmit.bind(this)}
-          />
         </Content>
       </Container>
     );

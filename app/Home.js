@@ -27,8 +27,8 @@ class Main extends React.Component {
   static navigationOptions = ({navigation}) => ({
     title: 'App',
     headerLeft: (
-      <Button transparent onPress={() => navigation.navigate('Points')}>
-        <Icon name='menu' />
+      <Button transparent onPress={() => navigation.navigate('Points')} style={{marginTop: 20}}>
+        <Icon name='md-trophy' />
       </Button>
     )
   });
@@ -53,8 +53,8 @@ class Main extends React.Component {
   render() {
 
     return (
-      <Container>
-        <Header>
+      <Container >
+        <Header >
           <Body>
             <Title>Cheers {this.props.username}!</Title>
           </Body>
@@ -64,8 +64,10 @@ class Main extends React.Component {
         </Content>
         <Footer>
           <FooterTab>
-            <Button full>
-              <Text>Footer</Text>
+            <Button full style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+              <Text>      With</Text>
+              <Icon name='heart' />
+              <Text>by MichMich!      </Text>
             </Button>
           </FooterTab>
         </Footer>

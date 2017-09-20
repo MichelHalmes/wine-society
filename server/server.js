@@ -194,17 +194,23 @@ app.get('/api/points/:username', function (req, res) {
   if (player === undefined) {
     return res.status(404).send(`Username '${username}' not found`);
   }
-  let summary = player.guesses
+  const summary = player.guesses
     .map((guess, round) =>
       Object.keys(guess)
         .reduce((summary_acc, tag) => {
           const points = TAGS[tag] && (guess[tag]==TAGS[tag]? NB_ROUNDS-round+1 : 0)
           summary_acc[tag] = {points, wine: guess[tag]}
           return summary_acc
-        }
-        , {}))
+        }, {}))
 
-  res.json({ points: player.points, summary })
+  const ranking = 1 +
+    Object.values(PLAYERS)
+      .map(player => player.points)
+      .filter((elem, index, self) => index == self.indexOf(elem))
+      .sort((a, b) => b - a)
+      .indexOf(player.points)
+
+  res.json({ points: player.points, summary, ranking })
 })
 
 

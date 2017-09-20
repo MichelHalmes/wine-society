@@ -26,7 +26,7 @@ import client from './client.js'
 class Points extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {points: null, summary: null, }
+    this.state = {points: null, summary: null, ranking: null}
   }
 
   static navigationOptions = {
@@ -37,7 +37,7 @@ class Points extends React.Component {
     console.log(this.props)
     client.getPoints(this.props.username)
       .then(res => {
-        this.setState({points: res.points, summary: res.summary})
+        this.setState({points: res.points, summary: res.summary, ranking: res.ranking})
       })
       .catch(err => {
         if (err.status == 404) {
@@ -71,9 +71,18 @@ class Points extends React.Component {
 
     return(
       <ScrollView>
-        <Text style={{textAlign: 'center', padding: 5, fontSize: 20, fontWeight: 'bold'}}>
-          You have {this.state.points} points!
-        </Text>
+        <Card>
+          <CardItem>
+            <Text style={{textAlign: 'center', padding: 5, fontSize: 20, fontWeight: 'bold'}}>
+              You have {this.state.points} points!
+            </Text>
+          </CardItem>
+          <CardItem>
+            <Text style={{textAlign: 'center', padding: 5, fontSize: 20, fontWeight: 'bold'}}>
+              Ranking: #{this.state.ranking}
+            </Text>
+          </CardItem>
+        </Card>
         <List >
           {this.state.summary
             .filter(round => !!round)

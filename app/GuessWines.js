@@ -62,8 +62,6 @@ class GuessWines extends React.Component {
           throw err
         }
       })
-
-
   }
 
   render() {

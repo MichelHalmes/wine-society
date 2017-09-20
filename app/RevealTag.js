@@ -1,18 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {
-  Text,
   Spinner,
   H3,
   Form,
   Picker,
   Radio,
   ListItem,
+  Left,
   Right,
-  Button
+  Button,
+  Card,
+  CardItem,
+  Badge
 } from 'native-base'
 
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 
 import reactMixin from 'react-mixin'
 import TimerMixin from 'react-timer-mixin'
@@ -70,11 +73,18 @@ class RevealTag extends React.Component {
       )
     }
     return(
-      <View>
-        <H3 style={{textAlign: 'center', marginTop: 5}}>
-          Reveal tag: {this.state.reveal_tag}!
-        </H3>
-        <Form>
+      <View style={{margin: 10, marginTop: 35}}>
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: "center", alignItems: "center"}} >
+          <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+            Reveal tag:
+          </Text>
+          <Badge style={{ margin: 10, backgroundColor: 'maroon'}}>
+            <Text style={{fontSize: 18, fontWeight: 'bold', color: 'white'}}>
+              {this.state.reveal_tag}
+            </Text>
+          </Badge>
+        </View>
+        <Form style={{backgroundColor: 'white'}}>
           <Picker
             placeholder="Click here!"
             iosHeader="Select a wine!"
@@ -88,7 +98,7 @@ class RevealTag extends React.Component {
           </Picker>
         </Form>
         <Button block success disabled={!this.state.selected_wine} onPress={this.handleRevealSubmit.bind(this)}>
-          <Text>Submit</Text>
+          <Text style={{fontSize: 15, color: 'white'}}>Submit</Text>
         </Button>
       </View>
     )
