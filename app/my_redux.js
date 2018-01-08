@@ -20,7 +20,7 @@ export function resetUsernameAC(username) {
 }
 
 
-function usernameReducer(state = 'mich', action) {
+function usernameReducer(state = null, action) {
   switch (action.type) {
     case REQUEST_POST_LOGIN:
       return action.username

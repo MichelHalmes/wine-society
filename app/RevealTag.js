@@ -37,6 +37,7 @@ class RevealTag extends React.Component {
   checkRevealTag() {
     client.getRevealTag()
       .then(({phase, reveal_tag, wines}) => {
+        console.log("-----------getRevealTag")
         if (phase != 'reveal') {
           this.props.dispatch(nextPhaseAC())
         } else if (!reveal_tag) {
@@ -44,6 +45,10 @@ class RevealTag extends React.Component {
         } else {
           this.setState({reveal_tag, wines, selected_wine: undefined})
         }
+      })
+      .catch((err) => {
+        console.log(err)
+        this.props.dispatch(nextPhaseAC())
       })
   }
 

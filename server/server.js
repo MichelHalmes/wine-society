@@ -24,7 +24,8 @@ const PHASES = {
   REVEAL: 'reveal'
 }
 
-const WINES = ['Merlot', 'Pinotage', 'Cabernet Sauvignon', 'Pinot Noir', 'Shiraz']
+const WINES = ['Chenin Blanc (Unwooded)', 'Sauvignon Blanc', 'Unwooded Chardonnay', 'Wooded Chardonnay', 'Viognier']
+
 const NB_ROUNDS = 4 // Number of actual bottles in the game
 
 // ===== STATE =====
@@ -161,7 +162,8 @@ app.post('/api/reveal_tag', function (req, res, next) {
   const tag = req.body.tag
   const wine = req.body.wine
   if (CURR_REVEAL_TAG != tag) {
-    return res.status(406).send(`Revealed wrong tag: ${tag} vs ${CURR_REVEAL_TAG}`);
+    res.json({ ok: true })
+    // return res.status(406).send(`Revealed wrong tag: ${tag} vs ${CURR_REVEAL_TAG}`);
   }
   if (CURR_PHASE != PHASES.REVEAL) {
     return res.status(405).send(`Nothing to reveal`);
