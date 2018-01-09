@@ -1,14 +1,16 @@
 
 
-const SERVER_HOST_PORT = 'http://10.0.0.3:3000'
+const SERVER_HOST_PORT = 'http://10.0.0.5:3000'
 
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response
   } else {
-    console.log('Client Error:', response);
-    throw response;
+    console.log('Client Error:', response.status, response.url);
+    let error = new Error(response.statusText);
+    error.response = response;
+    throw error; // TODO: erros do not get handled properly on the client side
   }
 }
 
